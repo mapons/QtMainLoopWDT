@@ -44,7 +44,8 @@ public slots:
     void startWdt();
     //stop WDT monitor
     void stopWdt();
-
+    //Force app restart
+    void forceAppRestart();
 private slots:
     //main loop reset WDT
     void resetWdtMainloop();

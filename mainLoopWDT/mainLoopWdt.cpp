@@ -61,6 +61,7 @@ mainLoopWdt::~mainLoopWdt(){
 void mainLoopWdt::startWdt(){
     if(!isRunning()){
         qInfo()<<"WDT: start";
+        m_tcpp.restart();
         m_timer_mainloop.start();//mainloop timer
         start(QThread::HighestPriority);//thread timer
     }
@@ -140,4 +141,7 @@ void mainLoopWdt::forceRestart[[ noreturn ]](){
     argv2.push_back(0); //null termination for exec
     execvp(QCoreApplication::arguments().at(0).toLocal8Bit().data(),const_cast<char**>(argv2.data()));
 #endif
+}
+void mainLoopWdt::forceAppRestart(){
+    forceRestart();
 }

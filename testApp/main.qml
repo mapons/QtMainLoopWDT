@@ -5,8 +5,8 @@ import QtQuick.Window 2.12
 import QtQuick.Controls 2.12
 Window {
     id:playerWindow
-    width: 640
-    height: 480
+    width: 600
+    height: 800
     visible: true
     title: qsTr("QT Main Loop block TEST")
     Page{
@@ -45,35 +45,65 @@ Window {
                     onTriggered: counter++
                 }
             }
+
+
             Label{
+                anchors.horizontalCenter: parent.horizontalCenter
                 text:qsTr("Press button to start a infinite loop")
             }
             Button{
                 anchors.horizontalCenter: parent.horizontalCenter
-                text:"START QML INFINITE LOOP"
+                text:qsTr("START QML INFINITE LOOP")
                 onClicked: {
                     for(;;){} //inifinite loop
                 }
             }
+
             Button{
                 anchors.horizontalCenter: parent.horizontalCenter
-                text:"BLOCK UI 3500ms"
-                onClicked: {
-                    Utils.temporalBlockMainLoop(3500)
-                }
-            }
-            Button{
-                anchors.horizontalCenter: parent.horizontalCenter
-                text:"START C++ INFINITE LOOP"
+                text:qsTr("START C++ INFINITE LOOP")
                 onClicked: {
                     Utils.infiniteLoop()
                 }
             }
             Button{
                 anchors.horizontalCenter: parent.horizontalCenter
-                text:"C++ MUTEX DOUBLE LOCK"
+                text:qsTr("C++ MUTEX DOUBLE LOCK")
                 onClicked: {
                     Utils.mutexDoubleLock()
+                }
+            }
+
+            Label{
+                anchors.horizontalCenter: parent.horizontalCenter
+                text:qsTr("Test fast restart")
+            }
+            Button{
+                anchors.horizontalCenter: parent.horizontalCenter
+                text:qsTr("FORCE APP RESTART")
+                onClicked: {
+                    WDT.forceAppRestart()
+                }
+            }
+            Label{
+                anchors.horizontalCenter: parent.horizontalCenter
+                text:qsTr("Test WDT ON/OFF")
+            }
+            Button{
+                anchors.horizontalCenter: parent.horizontalCenter
+                text:checked?qsTr("WDT ENABLED"):qsTr("WDT DISABLED")
+                checkable: true
+                checked: true
+                onClicked: {
+                    if(checked) WDT.startWdt()
+                    else WDT.stopWdt()
+                }
+            }
+            Button{
+                anchors.horizontalCenter: parent.horizontalCenter
+                text:qsTr("BLOCK UI 5500ms")
+                onClicked: {
+                    Utils.temporalBlockMainLoop(5500)
                 }
             }
         }
