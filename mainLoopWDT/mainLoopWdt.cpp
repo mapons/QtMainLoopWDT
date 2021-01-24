@@ -26,10 +26,12 @@
 
 #ifndef Q_OS_WINDOWS
 #include <unistd.h>
+#else
+#include "Windows.h"
 #endif
 
-mainLoopWdt::mainLoopWdt(bool restartApp,unsigned int warningTimeut_ms, unsigned int restartTimeut_ms,QObject *parent) :
-    QThread(parent),m_timerWarning(warningTimeut_ms),m_timerRestart(restartTimeut_ms),m_restart(restartApp)
+mainLoopWdt::mainLoopWdt(bool restartApp,unsigned int warningTimeut_ms, unsigned int restartTimeut_ms,unsigned int appRestart_ms, QObject *parent) :
+    QThread(parent),m_timerWarning(warningTimeut_ms),m_timerRestart(restartTimeut_ms),m_appRestart_ms(appRestart_ms),m_restart(restartApp)
 {
     //coherent input data
     if(m_timerWarning<100) m_timerWarning=100;
@@ -122,7 +124,28 @@ void mainLoopWdt::forceExit[[ noreturn ]](){
 void mainLoopWdt::forceRestart[[ noreturn ]](){
     qCritical()<<"WDT: FORCE RESTART APP";
     auto list =QCoreApplication::arguments();
+    //DELAYED RESTART
+    if(m_appRestart_ms>0){
+        QString progcmd;
+        for(auto &arg:list){
+            if(progcmd.size()>0)progcmd+=" ";
+            progcmd+=arg;
+        }
 
+#ifdef Q_OS_WINDOWS
+        if(m_appRestart_ms<1000)m_appRestart_ms=1000;
+        progcmd="cmd.exe /C \"timeout /T "+QString::number((m_appRestart_ms+500)/1000,'g',0)+" & " + progcmd    +"\"";
+        WinExec(progcmd.toStdString().c_str(),11);//SW_HIDE
+#else
+        progcmd="sleep " + QString::number(m_appRestart_ms/1000.0,'g',3)+"s;"+progcmd;
+        QProcess::startDetached("bash",{"-c",progcmd} ); //start a new software instance
+#endif
+        //EXIT
+        //MSDN: When the application is linked with a debug version of the run-time libraries, abort creates a message box with three buttons: Abort, Retry, and Ignore
+        //std::abort(); //Abort https://en.cppreference.com/w/cpp/utility/program/abort
+        //std::quick_exit(EXIT_FAILURE);//FORCE EXIT https://en.cppreference.com/w/cpp/utility/program/quick_exit
+        std::exit(EXIT_FAILURE);
+    }
 #ifdef Q_OS_WINDOWS
     list.pop_front();
     QProcess::startDetached(QCoreApplication::arguments().at(0),list ); //start a new software instance

@@ -106,6 +106,25 @@ Window {
                     Utils.temporalBlockMainLoop(5500)
                 }
             }
+
+        }
+        Column{
+            width: parent.width
+            anchors.bottom: parent.bottom
+            anchors.horizontalCenter: parent.horizontalCenter
+            spacing: 5
+            Label{
+                width: parent.width
+                wrapMode: Text.WordWrap
+                visible:ENV.length>0
+                text:qsTr("ENVIRONMENT INHERITANCE. WDT_TEST = ") + ENV
+            }
+            Label{
+                width: parent.width
+                wrapMode: Text.WordWrap
+                visible:ARGLIST.length>0
+                text:qsTr("PROCESS ARGUMENTS = ") + ARGLIST
+            }
         }
     }
 }

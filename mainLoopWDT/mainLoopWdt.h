@@ -27,12 +27,13 @@ class mainLoopWdt : public QThread
 public:
     /**
         WDT for QT mainLoop.
-        @param restartApp  true: Blocking the  main event loop restarts the application  , false:  Blocking the  main event loop kills the application
+        @param AppRestart  true: Blocking the  main event loop restarts the application  , false:  Blocking the  main event loop kills the application
         @param warningTimeut_ms  timeout (ms) since locking the main event loop, once fulfilled, a warning message is displayed
         @param restartTimeut_ms  timeout (ms) since locking the main event loop, once fulfilled, the application is killed or restarted
+        @param appRestart_ms timeout (ms) to restart application. Maybe some software may need time after shutdown before restarting
         @param parent  QObject parent
     */
-    explicit mainLoopWdt(bool restartApp,unsigned int warningTimeut_ms=2000, unsigned int restartTimeut_ms=10000, QObject *parent = nullptr);
+    explicit mainLoopWdt(bool AppRestart,unsigned int warningTimeut_ms=2000, unsigned int restartTimeut_ms=10000,unsigned int appRestart_ms=0, QObject *parent = nullptr);
     ~mainLoopWdt() override;
 signals:
     //emited on WDT warning
@@ -63,6 +64,7 @@ private:
     unsigned int m_timerWarning=0;
     unsigned int m_timerRestart=0;
     unsigned int m_timerMainloopCheck=250;
+    unsigned int m_appRestart_ms=0;
     bool m_exit=false;
     bool m_restart=false;
     bool m_half=false;
