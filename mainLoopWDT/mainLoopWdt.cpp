@@ -121,7 +121,7 @@ void mainLoopWdt::forceExit[[ noreturn ]](){
     std::exit(EXIT_FAILURE);// EXIT https://en.cppreference.com/w/cpp/utility/program/exit
 }
 
-void mainLoopWdt::forceRestart[[ noreturn ]](){
+void mainLoopWdt::forceRestart(){
     qCritical()<<"WDT: FORCE RESTART APP";
     auto list =QCoreApplication::arguments();
     //DELAYED RESTART
@@ -164,6 +164,8 @@ void mainLoopWdt::forceRestart[[ noreturn ]](){
     argv2.push_back(0); //null termination for exec
     execvp(QCoreApplication::arguments().at(0).toLocal8Bit().data(),const_cast<char**>(argv2.data()));
 #endif
+    //DEATH CODE
+    std::exit(EXIT_FAILURE);
 }
 void mainLoopWdt::forceAppRestart(){
     forceRestart();
