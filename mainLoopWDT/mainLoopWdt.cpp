@@ -163,9 +163,9 @@ void mainLoopWdt::forceRestart(){
     std::transform(argsCopy.begin(), argsCopy.end(), argv2.begin(),[](std::string& str){return str.c_str();});
     argv2.push_back(0); //null termination for exec
     execvp(QCoreApplication::arguments().at(0).toLocal8Bit().data(),const_cast<char**>(argv2.data()));
-#endif
     //DEATH CODE
     std::exit(EXIT_FAILURE);
+#endif
 }
 void mainLoopWdt::forceAppRestart(){
     forceRestart();
