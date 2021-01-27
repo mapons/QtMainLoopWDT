@@ -87,7 +87,7 @@ Window {
             }
             Label{
                 anchors.horizontalCenter: parent.horizontalCenter
-                text:qsTr("Test WDT ON/OFF")
+                text:qsTr("Test Watch Dog Timer (WDT) ON/OFF")
             }
             Button{
                 anchors.horizontalCenter: parent.horizontalCenter
