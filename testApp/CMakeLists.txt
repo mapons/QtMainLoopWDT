@@ -17,7 +17,7 @@ set(SOURCES
 	utils.h
 )
 if(${QT_VERSION_MAJOR} EQUAL "6" )
-	qt_add_executables(${PROJECT_NAME}
+	qt_add_executable(${PROJECT_NAME}
 		${SOURCES}
 		qml.qrc
 	)
